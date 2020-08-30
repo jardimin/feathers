@@ -1,14 +1,19 @@
 {
   "name": "@feathersjs/express",
   "description": "Feathers Express framework bindings and REST provider",
-  "version": "1.2.7",
+  "version": "4.5.4",
   "homepage": "https://feathersjs.com",
   "main": "lib/",
+  "types": "index.d.ts",
   "keywords": [
     "feathers",
     "feathers-plugin"
   ],
   "license": "MIT",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/feathers"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/feathersjs/feathers.git"
@@ -23,10 +28,10 @@
     "url": "https://github.com/feathersjs/feathers/issues"
   },
   "engines": {
-    "node": ">= 6"
+    "node": ">= 10"
   },
   "scripts": {
-    "test": "mocha --opts ../../mocha.opts"
+    "test": "mocha --config ../../.mocharc.json"
   },
   "directories": {
     "lib": "lib"
@@ -35,16 +40,22 @@
     "access": "public"
   },
   "dependencies": {
-    "@feathersjs/commons": "^3.0.1",
-    "@feathersjs/errors": "^3.3.4",
-    "debug": "^4.0.0",
-    "express": "^4.16.2",
-    "uberproto": "^2.0.0"
+    "@feathersjs/commons": "^4.5.3",
+    "@feathersjs/errors": "^4.5.3",
+    "@types/express": "^4.17.7",
+    "debug": "^4.1.1",
+    "express": "^4.17.1",
+    "lodash": "^4.17.19",
+    "uberproto": "^2.0.6"
   },
   "devDependencies": {
-    "mocha": "^5.2.0",
-    "@feathersjs/feathers": "^3.2.3",
-    "axios": "^0.18.0",
-    "chai": "^4.1.2"
-  }
+    "@feathersjs/authentication": "^4.5.3",
+    "@feathersjs/authentication-local": "^4.5.4",
+    "@feathersjs/feathers": "^4.5.3",
+    "@feathersjs/tests": "^4.5.3",
+    "axios": "^0.19.2",
+    "lodash": "^4.17.19",
+    "mocha": "^8.0.1"
+  },
+  "gitHead": "9b9f0f13387341bdd320f1e66feda828fca2c9f2"
 }

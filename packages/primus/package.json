@@ -1,14 +1,19 @@
 {
   "name": "@feathersjs/primus",
   "description": "The Feathers Primus real-time API provider",
-  "version": "3.2.6",
+  "version": "4.5.4",
   "homepage": "https://feathersjs.com",
   "main": "lib/",
+  "types": "index.d.ts",
   "keywords": [
     "feathers",
     "feathers-plugin"
   ],
   "license": "MIT",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/feathers"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/feathersjs/feathers.git"
@@ -23,10 +28,10 @@
     "url": "https://github.com/feathersjs/feathers/issues"
   },
   "engines": {
-    "node": ">= 6"
+    "node": ">= 10"
   },
   "scripts": {
-    "test": "mocha --opts ../../mocha.opts"
+    "test": "mocha --config ../../.mocharc.json"
   },
   "directories": {
     "lib": "lib"
@@ -35,20 +40,21 @@
     "access": "public"
   },
   "dependencies": {
-    "@feathersjs/transport-commons": "^4.1.6",
-    "debug": "^4.0.0",
-    "primus": "^7.0.0",
+    "@feathersjs/transport-commons": "^4.5.3",
+    "debug": "^4.1.1",
+    "primus": "^7.3.5",
     "primus-emitter": "^3.1.1",
-    "uberproto": "^2.0.1"
+    "uberproto": "^2.0.6"
   },
   "devDependencies": {
-    "@feathersjs/commons": "^3.0.1",
-    "@feathersjs/express": "^1.2.7",
-    "@feathersjs/feathers": "^3.2.3",
-    "feathers": "^2.2.3",
-    "feathers-memory": "^2.0.0",
-    "lodash": "^4.0.1",
-    "mocha": "^5.2.0",
-    "ws": "^6.0.0"
-  }
+    "@feathersjs/commons": "^4.5.3",
+    "@feathersjs/express": "^4.5.4",
+    "@feathersjs/feathers": "^4.5.3",
+    "@feathersjs/tests": "^4.5.3",
+    "feathers-memory": "^4.1.0",
+    "lodash": "^4.17.19",
+    "mocha": "^8.0.1",
+    "ws": "^7.3.1"
+  },
+  "gitHead": "9b9f0f13387341bdd320f1e66feda828fca2c9f2"
 }

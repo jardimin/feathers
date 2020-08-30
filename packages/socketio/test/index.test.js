@@ -1,17 +1,20 @@
 const feathers = require('@feathersjs/feathers');
 const express = require('@feathersjs/express');
 const assert = require('assert');
-const _ = require('lodash');
+const omit = require('lodash/omit');
+const extend = require('lodash/extend');
 const io = require('socket.io-client');
 const request = require('request');
-const { Service } = require('feathers-commons/lib/test/fixture');
+const { Service } = require('@feathersjs/tests/lib/fixture');
 
 const methodTests = require('./methods.js');
 const eventTests = require('./events');
 const socketio = require('../lib');
 
 describe('@feathersjs/socketio', () => {
-  let app, server, socket;
+  let app;
+  let server;
+  let socket;
 
   const socketParams = {
     user: { name: 'David' },
@@ -38,6 +41,7 @@ describe('@feathersjs/socketio', () => {
       .configure(socketio(function (io) {
         io.use(function (socket, next) {
           socket.feathers.user = { name: 'David' };
+          socketParams.headers = socket.feathers.headers;
 
           const { channel } = socket.handshake.query;
 
@@ -74,20 +78,8 @@ describe('@feathersjs/socketio', () => {
     server.close(done);
   });
 
-  it('exports default and SOCKET_KEY', () => {
-    assert.ok(socketio.SOCKET_KEY);
+  it('exports default', () => {
     assert.strictEqual(socketio, socketio.default);
-  });
-
-  it('throws an error when using an incompatible version of Feathers', () => {
-    const oldFeathers = require('feathers');
-
-    try {
-      oldFeathers().configure(socketio());
-      assert.ok(false, 'Should never get here');
-    } catch (e) {
-      assert.strictEqual(e.message, '@feathersjs/socketio is not compatible with this version of Feathers. Use the latest at @feathersjs/feathers.');
-    }
   });
 
   it('runs io before setup (#131)', done => {
@@ -135,11 +127,11 @@ describe('@feathersjs/socketio', () => {
   });
 
   it('can set options (#12)', done => {
-    let app = feathers().configure(socketio({
+    let application = feathers().configure(socketio({
       path: '/test/'
-    }, io => assert.ok(io)));
+    }, ioInstance => assert.ok(ioInstance)));
 
-    let srv = app.listen(8987).on('listening', () => {
+    let srv = application.listen(8987).on('listening', () => {
       const url = 'http://localhost:8987/test/socket.io.js';
 
       // eslint-disable-next-line handle-callback-err
@@ -158,12 +150,12 @@ describe('@feathersjs/socketio', () => {
     };
 
     service.create = function (data, params) {
-      assert.deepStrictEqual(_.omit(params, 'query', 'route', 'connection'), socketParams, 'Passed handshake parameters');
+      assert.deepStrictEqual(omit(params, 'query', 'route', 'connection'), socketParams, 'Passed handshake parameters');
       return old.create.apply(this, arguments);
     };
 
     service.update = function (id, data, params) {
-      assert.deepStrictEqual(params, _.extend({
+      assert.deepStrictEqual(params, extend({
         route: {},
         connection: socketParams,
         query: {
@@ -180,10 +172,25 @@ describe('@feathersjs/socketio', () => {
         test: 'param'
       }, error => {
         assert.ok(!error);
-        _.extend(service, old);
+        extend(service, old);
         done();
       });
     });
+  });
+
+  it('connection and disconnect events (#1243, #1238)', (done) => {
+    const mySocket = io('http://localhost:7886?channel=dctest');
+
+    app.once('connection', connection => {
+      assert.strictEqual(connection.channel, 'dctest');
+      app.once('disconnect', disconnection => {
+        assert.strictEqual(disconnection.channel, 'dctest');
+        done();
+      });
+      setTimeout(() => mySocket.close(), 100);
+    });
+
+    assert.ok(mySocket);
   });
 
   it('missing parameters in socket call works (#88)', done => {
@@ -191,13 +198,13 @@ describe('@feathersjs/socketio', () => {
     let old = { find: service.find };
 
     service.find = function (params) {
-      assert.deepStrictEqual(_.omit(params, 'query', 'route', 'connection'), socketParams, 'Handshake parameters passed on proper position');
+      assert.deepStrictEqual(omit(params, 'query', 'route', 'connection'), socketParams, 'Handshake parameters passed on proper position');
       return old.find.apply(this, arguments);
     };
 
     socket.emit('find', 'todo', error => {
       assert.ok(!error);
-      _.extend(service, old);
+      extend(service, old);
       done();
     });
   });

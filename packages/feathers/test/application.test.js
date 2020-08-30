@@ -1,6 +1,5 @@
 const assert = require('assert');
 const Proto = require('uberproto');
-const { hooks } = require('@feathersjs/commons');
 const feathers = require('../lib');
 
 describe('Feathers application', () => {
@@ -19,12 +18,8 @@ describe('Feathers application', () => {
   it('sets the version on main and app instance', () => {
     const app = feathers();
 
-    assert.strictEqual(feathers.version, '3.0.0-development');
-    assert.strictEqual(app.version, '3.0.0-development');
-  });
-
-  it('sets SKIP on main', () => {
-    assert.strictEqual(feathers.SKIP, hooks.SKIP);
+    assert.ok(feathers.version > '4.0.0');
+    assert.ok(app.version > '4.0.0');
   });
 
   it('is an event emitter', done => {
@@ -85,15 +80,9 @@ describe('Feathers application', () => {
       const app = feathers();
 
       try {
-        app.use('/', {});
+        app.use(null, {});
       } catch (e) {
-        assert.strictEqual(e.message, `'/' is not a valid service path.`);
-      }
-
-      try {
-        app.use('', {});
-      } catch (e) {
-        assert.strictEqual(e.message, `'' is not a valid service path.`);
+        assert.strictEqual(e.message, `'null' is not a valid service path.`);
       }
 
       try {
@@ -133,6 +122,17 @@ describe('Feathers application', () => {
       return wrappedService.create({
         message: 'Test message'
       }).then(data => assert.strictEqual(data.message, 'Test message'));
+    });
+
+    it('can use a root level service', () => {
+      const app = feathers().use('/', {
+        get (id) {
+          return Promise.resolve({ id });
+        }
+      });
+
+      return app.service('/').get('test')
+        .then(result => assert.deepStrictEqual(result, { id: 'test' }));
     });
 
     it('services can be re-used (#566)', done => {

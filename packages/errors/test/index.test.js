@@ -78,6 +78,10 @@ describe('@feathersjs/errors', () => {
       assert.notStrictEqual(typeof errors.Conflict, 'undefined', 'has Conflict');
     });
 
+    it('Gone', () => {
+      assert.notStrictEqual(typeof errors.Gone, 'undefined', 'has Gone');
+    });
+
     it('Length Required', () => {
       assert.notStrictEqual(typeof errors.LengthRequired, 'undefined', 'has LengthRequired');
     });
@@ -142,6 +146,10 @@ describe('@feathersjs/errors', () => {
       assert.notStrictEqual(typeof errors[409], 'undefined', 'has Conflict alias');
     });
 
+    it('410', () => {
+      assert.notStrictEqual(typeof errors[410], 'undefined', 'has Gone alias');
+    });
+
     it('411', () => {
       assert.notStrictEqual(typeof errors[411], 'undefined', 'has LengthRequired alias');
     });
@@ -179,7 +187,8 @@ describe('@feathersjs/errors', () => {
         const E = errors[name];
 
         if (E) {
-          new E('Something went wrong'); // eslint-disable-line no-new
+          // tslint:disable-next-line
+          new E('Something went wrong');
         }
       });
     });

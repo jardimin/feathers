@@ -66,11 +66,11 @@ const application = {
       throw new Error('Registering a new service with `app.service(path, service)` is no longer supported. Use `app.use(path, service)` instead.');
     }
 
-    const location = stripSlashes(path);
+    const location = stripSlashes(path) || '/';
     const current = this.services[location];
 
     if (typeof current === 'undefined' && typeof this.defaultService === 'function') {
-      return this.use(`/${location}`, this.defaultService(location))
+      return this.use(location, this.defaultService(location))
         .service(location);
     }
 
@@ -78,15 +78,13 @@ const application = {
   },
 
   use (path, service, options = {}) {
-    if (typeof path !== 'string' || stripSlashes(path) === '') {
+    if (typeof path !== 'string') {
       throw new Error(`'${path}' is not a valid service path.`);
     }
 
-    const location = stripSlashes(path);
+    const location = stripSlashes(path) || '/';
     const isSubApp = typeof service.service === 'function' && service.services;
-    const isService = this.methods.concat('setup').some(name =>
-      (service && typeof service[name] === 'function')
-    );
+    const isService = this.methods.concat('setup').some(name => typeof service[name] === 'function');
 
     if (isSubApp) {
       const subApp = service;

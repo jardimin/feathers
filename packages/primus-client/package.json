@@ -1,14 +1,19 @@
 {
   "name": "@feathersjs/primus-client",
   "description": "Client services for Primus and feathers-primus",
-  "version": "1.1.5",
+  "version": "4.5.4",
   "homepage": "https://feathersjs.com",
   "main": "lib/index.js",
+  "types": "index.d.ts",
   "keywords": [
     "feathers",
     "feathers-plugin"
   ],
   "license": "MIT",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/feathers"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/feathersjs/feathers.git"
@@ -23,10 +28,10 @@
     "url": "https://github.com/feathersjs/feathers/issues"
   },
   "engines": {
-    "node": ">= 6.0.0"
+    "node": ">= 12"
   },
   "scripts": {
-    "test": "mocha --opts ../../mocha.opts"
+    "test": "mocha --config ../../.mocharc.json"
   },
   "directories": {
     "lib": "lib"
@@ -35,15 +40,16 @@
     "access": "public"
   },
   "dependencies": {
-    "@feathersjs/transport-commons": "^4.1.6"
+    "@feathersjs/transport-commons": "^4.5.3"
   },
   "devDependencies": {
-    "@feathersjs/commons": "^3.0.1",
-    "@feathersjs/feathers": "^3.2.3",
-    "@feathersjs/primus": "^3.2.6",
-    "chai": "^4.1.2",
-    "feathers-memory": "^2.0.0",
-    "mocha": "^5.2.0",
-    "ws": "^6.0.0"
-  }
+    "@feathersjs/commons": "^4.5.3",
+    "@feathersjs/feathers": "^4.5.3",
+    "@feathersjs/primus": "^4.5.4",
+    "@feathersjs/tests": "^4.5.3",
+    "feathers-memory": "^4.1.0",
+    "mocha": "^8.0.1",
+    "ws": "^7.3.1"
+  },
+  "gitHead": "9b9f0f13387341bdd320f1e66feda828fca2c9f2"
 }

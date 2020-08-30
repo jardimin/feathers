@@ -2,8 +2,9 @@ const feathers = require('@feathersjs/feathers');
 const express = require('@feathersjs/express');
 const assert = require('assert');
 const request = require('request');
-const _ = require('lodash');
-const { Service } = require('feathers-commons/lib/test-fixture');
+const omit = require('lodash/omit');
+const extend = require('lodash/extend');
+const { Service } = require('@feathersjs/tests/lib/fixture');
 
 const primus = require('../lib');
 const methodTests = require('./methods.js');
@@ -29,6 +30,7 @@ describe('@feathersjs/primus', () => {
       }, function (primus) {
         primus.authorize(function (req, done) {
           req.feathers.user = { name: 'David' };
+          options.socketParams.headers = req.feathers.headers;
 
           const { channel } = req.query;
 
@@ -62,24 +64,12 @@ describe('@feathersjs/primus', () => {
     options.server.close(done);
   });
 
-  it('exports default and SOCKET_KEY', () => {
-    assert.ok(primus.SOCKET_KEY);
+  it('exports default', () => {
     assert.strictEqual(primus, primus.default);
   });
 
   it('is CommonJS compatible', () => {
     assert.strictEqual(typeof require('../lib'), 'function');
-  });
-
-  it('throws an error when using an incompatible version of Feathers', () => {
-    const oldFeathers = require('feathers');
-
-    try {
-      oldFeathers().configure(primus());
-      assert.ok(false, 'Should never get here');
-    } catch (e) {
-      assert.strictEqual(e.message, '@feathersjs/primus is not compatible with this version of Feathers. Use the latest at @feathersjs/feathers.');
-    }
   });
 
   it('runs primus before setup (#131)', done => {
@@ -134,21 +124,21 @@ describe('@feathersjs/primus', () => {
     };
 
     service.find = function (params) {
-      assert.deepStrictEqual(_.omit(params, 'query', 'route', 'connection'), options.socketParams,
+      assert.deepStrictEqual(omit(params, 'query', 'route', 'connection'), options.socketParams,
         'Handshake parameters passed on proper position');
 
       return old.find.apply(this, arguments);
     };
 
     service.create = function (data, params) {
-      assert.deepStrictEqual(_.omit(params, 'query', 'route', 'connection'), options.socketParams,
+      assert.deepStrictEqual(omit(params, 'query', 'route', 'connection'), options.socketParams,
         'Passed handshake parameters');
 
       return old.create.apply(this, arguments);
     };
 
     service.update = function (id, data, params) {
-      assert.deepStrictEqual(params, _.extend({
+      assert.deepStrictEqual(params, extend({
         connection: options.socketParams,
         route: {},
         query: {
@@ -164,7 +154,7 @@ describe('@feathersjs/primus', () => {
 
       options.socket.send('update', 'todo', 1, {}, { test: 'param' }, () => {
         assert.ok(!error);
-        _.extend(service, old);
+        extend(service, old);
         done();
       });
     });
@@ -177,16 +167,34 @@ describe('@feathersjs/primus', () => {
     };
 
     service.find = function (params) {
-      assert.deepStrictEqual(_.omit(params, 'query', 'route', 'connection'), options.socketParams,
+      assert.deepStrictEqual(omit(params, 'query', 'route', 'connection'), options.socketParams,
         'Handshake parameters passed on proper position');
 
       return old.find.apply(this, arguments);
     };
 
     options.socket.send('find', 'todo', function () {
-      _.extend(service, old);
+      extend(service, old);
       done();
     });
+  });
+
+  it('connection and disconnect events (#1243, #1238)', (done) => {
+    const { app, primus } = options;
+    const mySocket = new primus.Socket('http://localhost:7888?channel=dctest');
+
+    app.on('connection', connection => {
+      if (connection.channel === 'dctest') {
+        assert.strictEqual(connection.channel, 'dctest');
+        app.once('disconnect', disconnection => {
+          assert.strictEqual(disconnection.channel, 'dctest');
+          done();
+        });
+        setTimeout(() => mySocket.end(), 100);
+      }
+    });
+
+    assert.ok(mySocket);
   });
 
   describe('Service method calls', () => {
