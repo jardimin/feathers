@@ -40,16 +40,16 @@
     "access": "public"
   },
   "dependencies": {
-    "@feathersjs/transport-commons": "^4.5.8",
+    "@feathersjs/transport-commons": "^4.5.9",
     "debug": "^4.2.0",
     "primus": "^7.3.5",
     "primus-emitter": "^3.1.1",
     "uberproto": "^2.0.6"
   },
   "devDependencies": {
-    "@feathersjs/commons": "^4.5.8",
-    "@feathersjs/express": "^4.5.8",
-    "@feathersjs/feathers": "^4.5.8",
+    "@feathersjs/commons": "^4.5.9",
+    "@feathersjs/express": "^4.5.9",
+    "@feathersjs/feathers": "^4.5.9",
     "@feathersjs/tests": "^4.5.3",
     "feathers-memory": "^4.1.0",
     "lodash": "^4.17.20",

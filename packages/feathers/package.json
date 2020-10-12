@@ -45,7 +45,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@feathersjs/commons": "^4.5.8",
+    "@feathersjs/commons": "^4.5.9",
     "debug": "^4.2.0",
     "events": "^3.2.0",
     "uberproto": "^2.0.6"
