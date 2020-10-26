@@ -45,14 +45,14 @@
     "qs": "^6.9.4"
   },
   "devDependencies": {
-    "@angular/common": "^10.1.6",
-    "@angular/core": "^10.1.6",
+    "@angular/common": "^10.2.0",
+    "@angular/core": "^10.2.0",
     "@angular/http": "^7.2.16",
-    "@angular/platform-browser": "^10.1.6",
+    "@angular/platform-browser": "^10.2.0",
     "@feathersjs/express": "^4.5.9",
     "@feathersjs/feathers": "^4.5.9",
     "@feathersjs/tests": "^4.5.3",
-    "axios": "^0.20.0",
+    "axios": "^0.21.0",
     "body-parser": "^1.19.0",
     "feathers-memory": "^4.1.0",
     "mocha": "^8.2.0",
